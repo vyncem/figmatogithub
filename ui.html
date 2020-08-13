@@ -1,0 +1,17 @@
+<h2>Figma to Github</h2>
+<p>Github Issue Id: <input id="github-id" value="5"></p>
+<button id="create">Push</button>
+<button id="cancel">Cancel</button>
+<script>
+
+document.getElementById('create').onclick = () => {
+  const textbox = document.getElementById('github-id');
+  const githubId = parseInt(textbox.value, 10);
+  parent.postMessage({ pluginMessage: { type: 'pushed', githubId: githubId } }, '*')
+}
+
+document.getElementById('cancel').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+}
+
+</script>

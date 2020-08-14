@@ -1,35 +1,80 @@
-<h2>Figma to Github</h2>
-<p>Github Issue Id: <input id="github-id" value="5"></p>
-<button id="create">Push</button>
-<button id="cancel">Cancel</button>
+<head>
+  <link rel="stylesheet" href="./styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    body, html {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 500;
+        height: 100%;
+        margin: 0;
+        text-align: center;
+    }
+
+    .plugin-body {
+        margin-bottom: 2em;
+    }
+
+    input {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        border-radius: 2px;
+        height: 2em;
+        width: 15em;
+    }
+
+    p {
+        margin-block-end: 0.2em;
+    }
+
+    button {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 500;
+        font-size: 1.5em;
+        background: linear-gradient(90deg, rgba(253, 200, 48, 0.68) 0%, #F37335 100%);
+        border-radius: 3px;
+        border: none;
+    }
+  </style>
+</head>
+
+<div class="plugin-body">
+  <p>GitHub issue number</p>
+  <input id="github-id" value="5">
+</div>
+<div class="button-area">
+  <button id="create">Export to GitHub</button>
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
-
   document.getElementById('create').onclick = () => {
     const textbox = document.getElementById('github-id');
     const githubId = parseInt(textbox.value, 10);
     parent.postMessage({ pluginMessage: { type: 'networkRequest' } }, '*')
   }
 
-  document.getElementById('cancel').onclick = () => {
-    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-  }
+  // document.getElementById('cancel').onclick = () => {
+  //   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+  // }
 
   window.onmessage = async (event) => {
     if (event.data.pluginMessage.type === 'networkRequest') {
+      let img = "![GitHub Logo](https://s3-alpha-sig.figma.com/img/500d/8ec1/58bd03e5f964e7e6cc06e54587ab0a46?Expires=1598227200&Signature=a3GNzWCTTPJaNn3gVR9IS5r5so3o9ciA2-5fSmIpaOEDa677XNezGA~E9I8HwqTdQMkR-phMowMYKJQ-ptsSAGwRb-k1b8fAdMDgPcqCASZsCAbMXXF~MhYlY5vwRoA4NxvMU3rj4Bhh-WJar~GSim1pV2oAi8ns8aBJFU8Ue6jF9GB1MJkLqCGyJTZrwpfQYm-PPZqFC7nzDWMDhiAv0q0eT1VdFIo107vuh6hBe8VOnhymQN1Kj8kA3E7T-B5BhKL1XvPxr0SQZDRfmT5R0dUobm9mF8NO33Uwd31CC7sVtBObIEHCL6i9B30DyEycDYrdOZJYENjXuoU-3jNDOA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA)"
       axios.defaults.headers.common['Authorization'] = "token TOKEN"
-
-      axios.get('https://cors-anywhere.herokuapp.com/http://www.randomtext.me/download/text/lorem/ul-8/5-15')
-      .then( (response) => {
-        axios.post('https://api.github.com/repos/clio/themis/issues/comments/673393486', { "body": response.data })
-        .then( (responsePost) =>  {
-          console.log(responsePost)
-          window.parent.postMessage({ pluginMessage: response.data }, '*')
-        })
-        .catch(function (error) { console.log(error) })
-      }).catch( (error) => { console.log(error) } )
+      setTimeout(() => {
+        axios.get('https://cors-anywhere.herokuapp.com/http://www.randomtext.me/download/text/lorem/ul-8/5-15')
+        .then( (response) => {
+          axios.post('https://api.github.com/repos/clio/themis/issues/comments/673393486', { "body": `${img} ${response.data}` })
+          .then( (responsePost) =>  {
+            console.log(responsePost)
+            // window.parent.postMessage({ pluginMessage: `${img} ${response.data}` }, '*')
+          })
+          .catch(function (error) { console.log(error) })
+        }).catch( (error) => { console.log(error) } )
+      }, 2000);
     }
   }
 </script>

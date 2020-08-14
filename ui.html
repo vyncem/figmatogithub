@@ -2,16 +2,34 @@
 <p>Github Issue Id: <input id="github-id" value="5"></p>
 <button id="create">Push</button>
 <button id="cancel">Cancel</button>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
 
-document.getElementById('create').onclick = () => {
-  const textbox = document.getElementById('github-id');
-  const githubId = parseInt(textbox.value, 10);
-  parent.postMessage({ pluginMessage: { type: 'pushed', githubId: githubId } }, '*')
-}
+  document.getElementById('create').onclick = () => {
+    const textbox = document.getElementById('github-id');
+    const githubId = parseInt(textbox.value, 10);
+    parent.postMessage({ pluginMessage: { type: 'networkRequest' } }, '*')
+  }
 
-document.getElementById('cancel').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-}
+  document.getElementById('cancel').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+  }
 
+  window.onmessage = async (event) => {
+    if (event.data.pluginMessage.type === 'networkRequest') {
+      axios.defaults.headers.common['Authorization'] = "token TOKEN"
+
+      axios.get('https://cors-anywhere.herokuapp.com/http://www.randomtext.me/download/text/lorem/ul-8/5-15')
+      .then( (response) => {
+        axios.post('https://api.github.com/repos/clio/themis/issues/comments/673393486', { "body": response.data })
+        .then( (responsePost) =>  {
+          console.log(responsePost)
+          window.parent.postMessage({ pluginMessage: response.data }, '*')
+        })
+        .catch(function (error) { console.log(error) })
+      }).catch( (error) => { console.log(error) } )
+    }
+  }
 </script>

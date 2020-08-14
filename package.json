@@ -9,6 +9,7 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "@figma/plugin-typings": "^1.16.1"
+    "@figma/plugin-typings": "^1.16.1",
+    "axios": "^0.19.2"
   }
 }
